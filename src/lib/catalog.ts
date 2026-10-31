@@ -17,6 +17,7 @@ export type ProductItem = {
   n: string;
   p: number;
   sub?: string;
+  id?: string;
 };
 
 export type Service = {
@@ -33,6 +34,8 @@ export type Service = {
   admin?: number;
   prov: string[];
   items?: Record<string, ProductItem[]>;
+  dbServiceId?: string;
+  billItem?: ProductItem | null;
 };
 
 export const formatRp = (n: number) => "Rp" + Math.round(n).toLocaleString("id-ID");
@@ -288,35 +291,6 @@ export const CATEGORIES: { key: "all" | Category; label: string }[] = [
 
 export const isSlug = (value: string | null | undefined): value is Slug =>
   !!value && SERVICE_ORDER.includes(value as Slug);
-
-export type Bill = {
-  nama: string;
-  periode: string;
-  tagihan: number;
-  admin: number;
-  total: number;
-};
-
-export const simulateBill = (slug: Slug, provider: string, id: string): Bill => {
-  let hash = 0;
-  for (const c of id + provider) hash = (hash * 31 + c.charCodeAt(0)) % 100000;
-  const bills: Partial<Record<Slug, number>> = {
-    pdam: 85000,
-    "tv-internet": 330000,
-    multifinance: 780000,
-  };
-  const base = bills[slug] ?? 85000;
-  const amount = Math.round((base + hash * (slug === "multifinance" ? 3 : 1.5)) / 100) * 100;
-  const names = ["Budi Santoso", "Siti Rahma", "Andi Wijaya", "Dewi Lestari", "Rizky Pratama", "Nur Aini"];
-  const admin = SERVICES[slug].admin ?? 0;
-  return {
-    nama: names[hash % names.length],
-    periode: hash % 2 === 0 ? "Okt 2026" : "Sep–Okt 2026",
-    tagihan: amount,
-    admin,
-    total: amount + admin,
-  };
-};
 
 export const minPrice = (slug: Slug): number | null => {
   const service = SERVICES[slug];

@@ -1,52 +1,57 @@
 import type { Slug } from "./catalog";
 
-export const ORDERS_KEY = "suknexaidea_orders";
+export const ORDERS_KEY = "suknexaidea_invoices";
 export const QRIS_IMAGE =
   "https://res.cloudinary.com/dqjh7utdb/image/upload/v1792161327/camhvfeu1lcm0ps8ieiz.jpg";
 export const ADMIN_WA = "085711172317";
 export const WA_LINK = "https://wa.me/6285711172317";
 export const PAID_MESSAGE = "Terima kasih, pembayaran Anda sedang diproses";
 
-export type Order = {
-  id: string;
-  slug: Slug;
+export type RecentInvoice = {
+  ref: string;
+  label: string;
   product: string;
-  provider: string;
-  item: string;
-  target: string;
+  slug: Slug;
   amount: number;
-  method: "QRIS";
-  status: "processing";
   createdAt: number;
 };
 
-export const newOrderId = () =>
-  `SNX-${Date.now().toString(36).toUpperCase().slice(-6)}`;
-
-export const loadOrders = (): Order[] => {
-  if (typeof window === "undefined") return [];
-  try {
-    const parsed = JSON.parse(window.localStorage.getItem(ORDERS_KEY) || "[]");
-    return Array.isArray(parsed) ? (parsed as Order[]) : [];
-  } catch {
-    return [];
-  }
-};
-
-export const saveOrder = (order: Order): void => {
+export const rememberInvoice = (entry: RecentInvoice): void => {
   if (typeof window === "undefined") return;
+  const ref = entry.ref.trim().toUpperCase();
+  if (!ref) return;
   try {
-    const all = loadOrders();
-    all.unshift(order);
-    window.localStorage.setItem(ORDERS_KEY, JSON.stringify(all.slice(0, 30)));
+    const list = loadInvoices().filter((item) => item.ref !== ref);
+    const next = [{ ...entry, ref }, ...list].slice(0, 5);
+    window.localStorage.setItem(ORDERS_KEY, JSON.stringify(next));
   } catch {
     /* storage unavailable */
   }
 };
 
-export const findOrder = (id: string): Order | undefined => {
-  const key = id.trim().toUpperCase();
-  return loadOrders().find((order) => order.id === key);
+export const loadInvoices = (): RecentInvoice[] => {
+  if (typeof window === "undefined") return [];
+  try {
+    const parsed = JSON.parse(window.localStorage.getItem(ORDERS_KEY) || "[]");
+    if (!Array.isArray(parsed)) return [];
+    return parsed.flatMap((item) => {
+      if (!item || typeof item !== "object") return [];
+      const row = item as Record<string, unknown>;
+      if (typeof row.ref !== "string") return [];
+      return [
+        {
+          ref: row.ref,
+          label: typeof row.label === "string" ? row.label : "-",
+          product: typeof row.product === "string" ? row.product : "",
+          slug: (typeof row.slug === "string" ? row.slug : "pulsa") as Slug,
+          amount: Number(row.amount) || 0,
+          createdAt: Number(row.createdAt) || Date.now(),
+        },
+      ];
+    });
+  } catch {
+    return [];
+  }
 };
 
 export const waLink = (message: string) =>

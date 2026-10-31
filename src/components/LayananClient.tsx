@@ -10,11 +10,15 @@ import {
   SERVICE_CODES,
   SERVICE_ORDER,
   formatRp,
-  minPrice,
   type Category,
+  type Slug,
 } from "@/lib/catalog";
 
-export function LayananClient() {
+export function LayananClient({
+  minPrices,
+}: {
+  minPrices: Record<Slug, number | null>;
+}) {
   const [cat, setCat] = useState<"all" | Category>("all");
   const [query, setQuery] = useState("");
 
@@ -104,7 +108,7 @@ export function LayananClient() {
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {list.map((slug) => {
                 const service = SERVICES[slug];
-                const min = minPrice(slug);
+                const min = minPrices[slug] ?? null;
                 return (
                   <Link
                     key={slug}

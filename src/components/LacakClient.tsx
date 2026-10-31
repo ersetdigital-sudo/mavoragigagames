@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Icon } from "@/components/Icon";
 import { SERVICES, formatRp } from "@/lib/catalog";
@@ -10,26 +10,76 @@ import {
   WA_LINK,
   formatDate,
   formatTime,
-  loadOrders,
-  type Order,
+  loadInvoices,
+  type RecentInvoice,
 } from "@/lib/store";
+
+type PublicStatus = "success" | "processing" | "pending" | "expired";
+
+type ApiOrder = {
+  inv: string;
+  status: PublicStatus;
+  service: string;
+  product: string;
+  lines: [string, string][];
+  method: string;
+  total: number;
+  sn: string;
+  label: string;
+  created: number;
+  updated: number;
+  paidAt?: number;
+  qris: string | null;
+};
+
+const statusText: Record<PublicStatus, string> = {
+  pending: "MENUNGGU PEMBAYARAN",
+  processing: "SEDANG DIPROSES",
+  success: "SELESAI",
+  expired: "DIBATALKAN",
+};
 
 export function LacakClient() {
   const search = useSearchParams();
   const idParam = (search.get("id") ?? "").trim().toUpperCase();
   const [query, setQuery] = useState(idParam);
   const [active, setActive] = useState(idParam);
-  const [orders, setOrders] = useState<Order[]>([]);
+  const [result, setResult] = useState<ApiOrder | null | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [invoices, setInvoices] = useState<RecentInvoice[]>([]);
 
   useEffect(() => {
-    setOrders(loadOrders());
+    setInvoices(loadInvoices());
   }, []);
+
+  const lookup = useCallback(async (code: string) => {
+    if (!code) {
+      setResult(undefined);
+      return;
+    }
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/orders/${encodeURIComponent(code)}`, {
+        cache: "no-store",
+      });
+      setResult(response.ok ? ((await response.json()) as ApiOrder) : null);
+    } catch {
+      setResult(null);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (idParam) void lookup(idParam);
+  }, [idParam, lookup]);
 
   const submit = (event: React.FormEvent) => {
     event.preventDefault();
     const next = query.trim().toUpperCase();
     setQuery(next);
     setActive(next);
+    void lookup(next);
     if (next) {
       window.history.replaceState(null, "", `/lacak?id=${encodeURIComponent(next)}`);
     } else {
@@ -37,12 +87,11 @@ export function LacakClient() {
     }
   };
 
-  const order = active ? orders.find((entry) => entry.id === active) : undefined;
-
-  const select = (entry: Order) => {
-    setQuery(entry.id);
-    setActive(entry.id);
-    window.history.replaceState(null, "", `/lacak?id=${entry.id}`);
+  const select = (entry: RecentInvoice) => {
+    setQuery(entry.ref);
+    setActive(entry.ref);
+    void lookup(entry.ref);
+    window.history.replaceState(null, "", `/lacak?id=${entry.ref}`);
     document
       .getElementById("hasil")
       ?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -71,12 +120,12 @@ export function LacakClient() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           className="mono min-w-0 flex-1 bg-transparent text-base uppercase outline-none sm:text-lg"
-          placeholder="SNX-XXXXXX"
+          placeholder="SKX-XXXXXX"
           autoComplete="off"
           aria-label="Kode transaksi"
         />
-        <button type="submit" className="b b-ink">
-          Lacak
+        <button type="submit" className="b b-ink" disabled={loading}>
+          {loading ? "…" : "Lacak"}
         </button>
       </form>
 
@@ -87,22 +136,26 @@ export function LacakClient() {
               <div className="mono mut text-sm">
                 › menunggu input kode transaksi…
               </div>
-              {!orders.length && (
+              {!invoices.length && (
                 <Link href="/layanan" className="b b-ink mt-5">
                   Buat transaksi pertama
                 </Link>
               )}
             </div>
-          ) : !order ? (
+          ) : loading ? (
+            <div className="pn p-8">
+              <div className="mono mut text-sm">› mencari transaksi…</div>
+            </div>
+          ) : result ? (
+            <OrderResult order={result} />
+          ) : (
             <div className="pn p-8">
               <div className="mono font-bold">404 · {active}</div>
               <p className="mut mt-2 text-sm">
-                Kode tidak ditemukan di perangkat ini. Pastikan kodenya benar dan
-                kamu memakai browser yang sama saat transaksi.
+                Kode tidak ditemukan di server. Pastikan kodenya benar dan sudah
+                sesuai dengan pesanan yang dibuat.
               </p>
             </div>
-          ) : (
-            <OrderResult order={order} />
           )}
         </div>
 
@@ -112,10 +165,10 @@ export function LacakClient() {
             <span className="tag">max 5</span>
           </div>
           <div className="pn mt-4 overflow-hidden">
-            {orders.length ? (
-              orders.slice(0, 5).map((entry, index) => (
+            {invoices.length ? (
+              invoices.slice(0, 5).map((entry, index) => (
                 <button
-                  key={entry.id}
+                  key={entry.ref}
                   type="button"
                   onClick={() => select(entry)}
                   className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[#F3E64B]"
@@ -135,8 +188,8 @@ export function LacakClient() {
                     />
                   </span>
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate font-semibold">{entry.item}</span>
-                    <span className="mono mut block text-xs">{entry.id}</span>
+                    <span className="block truncate font-semibold">{entry.label}</span>
+                    <span className="mono mut block text-xs">{entry.ref}</span>
                   </span>
                   <span className="mono text-sm font-bold">
                     {formatRp(entry.amount)}
@@ -156,8 +209,8 @@ export function LacakClient() {
             className="mono mt-4 rounded-lg p-4 text-xs leading-relaxed"
             style={{ background: "var(--lem)", color: "var(--ink)", border: "1px solid var(--ink)" }}
           >
-            // MODE SIMULASI · transaksi tersimpan di browser ini. Pembayaran
-            QRIS diverifikasi manual oleh tim, lalu status diperbarui.
+            // STATUS SERVER · status diambil langsung dari server. Log lokal
+            cuma menyimpan kode invoice di browser ini.
           </div>
           <a
             href={WA_LINK}
@@ -173,36 +226,51 @@ export function LacakClient() {
   );
 }
 
-function OrderResult({ order }: { order: Order }) {
+function OrderResult({ order }: { order: ApiOrder }) {
+  const paidDone = order.status === "processing" || order.status === "success";
+  const target =
+    order.lines.find(([label]) => /tujuan/i.test(label))?.[1] ?? "-";
+
   const events = [
     {
       title: "Pesanan dibuat",
       detail: `checkout ${order.method}`,
-      time: formatTime(order.createdAt),
+      time: formatTime(order.created),
       pending: false,
     },
     {
-      title: "Pembayaran dikonfirmasi",
-      detail: `${formatRp(order.amount)} · dicek manual`,
-      time: formatTime(order.createdAt + 1800),
-      pending: false,
+      title:
+        order.status === "expired"
+          ? "Pesanan dibatalkan"
+          : paidDone
+            ? "Pembayaran dikonfirmasi"
+            : "Menunggu pembayaran",
+      detail: `${formatRp(order.total)} · dicek manual`,
+      time: paidDone ? formatTime(order.paidAt ?? order.updated) : "—",
+      pending: !paidDone,
     },
     {
-      title: "Sedang diproses",
-      detail: `${order.provider} · ${order.item}`,
-      time: formatTime(order.createdAt + 2600),
-      pending: true,
+      title:
+        order.status === "success"
+          ? "Pesanan selesai"
+          : order.status === "processing"
+            ? "Sedang diproses"
+            : order.status === "expired"
+              ? "Tidak diproses"
+              : "Diproses setelah pembayaran",
+      detail: `${order.service} · ${order.product}`,
+      time: order.status === "success" ? formatTime(order.updated) : "—",
+      pending: order.status !== "success",
     },
   ];
 
   const lines: [string, string][] = [
-    ["modul", order.product],
-    ["provider", order.provider],
-    ["item", order.item],
-    ["tujuan", order.target],
-    ["harga", formatRp(order.amount)],
+    ["modul", order.service],
+    ["produk", order.product],
+    ["tujuan", target],
+    ["harga", formatRp(order.total)],
     ["metode", order.method],
-    ["status", "Sedang diproses"],
+    ["status", statusText[order.status].toLowerCase()],
   ];
 
   return (
@@ -213,17 +281,17 @@ function OrderResult({ order }: { order: Order }) {
       >
         <div>
           <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
-            {order.product} · {formatDate(order.createdAt)}
+            {order.service} · {formatDate(order.created)}
           </div>
           <div className="mono mt-1 text-2xl font-bold sm:text-3xl" style={{ color: "#F3E64B" }}>
-            {order.id}
+            {order.inv}
           </div>
         </div>
         <span
           className="mono rounded px-2.5 py-1.5 text-xs font-bold"
           style={{ background: "#F3E64B", color: "#292F3D" }}
         >
-          ● SEDANG DIPROSES
+          ● {statusText[order.status]}
         </span>
       </div>
 
@@ -264,9 +332,22 @@ function OrderResult({ order }: { order: Order }) {
               <span className="text-right font-semibold break-all">{value}</span>
             </div>
           ))}
+
+          {order.sn ? (
+            <div
+              className="mt-4 rounded-lg p-3"
+              style={{ background: "var(--lem)", color: "var(--ink)" }}
+            >
+              <div className="text-[10px] font-bold uppercase tracking-wider opacity-70">
+                {order.label}
+              </div>
+              <div className="mt-1 break-all text-sm font-bold">{order.sn}</div>
+            </div>
+          ) : null}
+
           <div className="flex items-end justify-between pt-4">
             <span className="mut">total</span>
-            <span className="text-2xl font-bold">{formatRp(order.amount)}</span>
+            <span className="text-2xl font-bold">{formatRp(order.total)}</span>
           </div>
           <div className="mut mt-4 text-xs">
             pesanan diteruskan ke provider. Status berikutnya dikirim lewat

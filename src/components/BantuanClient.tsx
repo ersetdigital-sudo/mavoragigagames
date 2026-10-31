@@ -21,7 +21,7 @@ const FAQS: Faq[] = [
   {
     cat: "Pembayaran",
     q: "Kode QRIS-nya ada di mana?",
-    a: "Di halaman pembayaran yang muncul setelah checkout. Kalau halaman itu tertutup, buka lagi lewat kode SNX di halaman Lacak.",
+    a: "Di halaman pembayaran yang muncul setelah checkout. Kalau halaman itu tertutup, buka lagi lewat kode SKX di halaman Lacak.",
   },
   {
     cat: "Pembayaran",
@@ -31,7 +31,7 @@ const FAQS: Faq[] = [
   {
     cat: "Pembayaran",
     q: "Sudah bayar, tapi status belum berubah?",
-    a: "Pembayaran dicek manual oleh tim. Tekan tombol Saya sudah bayar, lalu kirim kode SNX ke WhatsApp support. Status pesanan akan diperbarui menjadi Sedang diproses.",
+    a: "Pembayaran dicek manual oleh tim. Tekan tombol Saya sudah bayar, lalu kirim kode SKX ke WhatsApp support. Status pesanan akan diperbarui menjadi Sedang diproses.",
   },
   {
     cat: "Pesanan",
@@ -46,27 +46,27 @@ const FAQS: Faq[] = [
   {
     cat: "Pesanan",
     q: "Transaksi gagal, bagaimana dananya?",
-    a: "Refund berjalan otomatis ke metode pembayaran awal, maksimal 1x24 jam. Kode SNX tetap bisa dipakai untuk melacak status pengembalian.",
+    a: "Refund berjalan otomatis ke metode pembayaran awal, maksimal 1x24 jam. Kode SKX tetap bisa dipakai untuk melacak status pengembalian.",
   },
   {
     cat: "Pesanan",
     q: "Di mana kode token PLN ditampilkan?",
-    a: "Di halaman Lacak transaksi, pada detail pesanan. Simpan kode SNX supaya kamu bisa membuka detailnya kapan saja.",
+    a: "Di halaman Lacak transaksi, pada detail pesanan. Simpan kode SKX supaya kamu bisa membuka detailnya kapan saja.",
   },
   {
     cat: "Akun",
     q: "Perlu registrasi untuk bertransaksi?",
-    a: "Tidak. Sistem berjalan tanpa akun. Kode SNX adalah satu-satunya kunci untuk melacak transaksi.",
+    a: "Tidak. Sistem berjalan tanpa akun. Kode SKX adalah satu-satunya kunci untuk melacak transaksi.",
   },
   {
     cat: "Akun",
     q: "Kenapa log transaksi saya kosong?",
-    a: "Log tersimpan di browser perangkat yang dipakai. Ganti perangkat atau hapus data browser akan mengosongkan log, tapi kode SNX tetap bisa dicari.",
+    a: "Log tersimpan di browser perangkat yang dipakai. Ganti perangkat atau hapus data browser akan mengosongkan log, tapi kode SKX tetap bisa dicari.",
   },
   {
     cat: "Akun",
     q: "Bagaimana cara melacak pesanan?",
-    a: "Buka halaman Lacak, masukkan kode SNX yang muncul di halaman pembayaran. Status terakhir dan rincian pesanan langsung tampil.",
+    a: "Buka halaman Lacak, masukkan kode SKX yang muncul di halaman pembayaran. Status terakhir dan rincian pesanan langsung tampil.",
   },
 ];
 
@@ -172,7 +172,7 @@ export function BantuanClient() {
             </div>
             <h2 className="mt-3 text-2xl">Butuh manusia sungguhan?</h2>
             <p className="mt-2 text-sm" style={{ color: "#B8BCC6" }}>
-              Tim support online 08.00–22.00 WIB. Sertakan kode SNX supaya
+              Tim support online 08.00–22.00 WIB. Sertakan kode SKX supaya
               kasusmu langsung ditangani.
             </p>
             <div className="mt-5 space-y-2">
@@ -210,7 +210,7 @@ export function BantuanClient() {
                 <span>
                   <b className="block">Lacak transaksi</b>
                   <span className="mono text-xs" style={{ color: "#9AA0AE" }}>
-                    cek status pakai kode SNX
+                    cek status pakai kode SKX
                   </span>
                 </span>
               </Link>

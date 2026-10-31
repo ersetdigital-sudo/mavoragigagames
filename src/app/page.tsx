@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { CommandBar } from "@/components/CommandBar";
 import { DirectoryExplorer } from "@/components/DirectoryExplorer";
+import { getStorefront } from "@/lib/catalog-hydrate";
 import { Icon } from "@/components/Icon";
 import { SERVICE_ORDER } from "@/lib/catalog";
 
@@ -13,7 +14,7 @@ const BENEFITS = [
   {
     icon: "search" as const,
     title: "Bisa dilacak",
-    body: "Setiap pesanan punya kode SNX.",
+    body: "Setiap pesanan punya kode SKX.",
   },
   {
     icon: "user" as const,
@@ -25,11 +26,13 @@ const BENEFITS = [
 const SPECS = [
   { icon: "bolt" as const, value: "±5s", body: "rata-rata waktu proses" },
   { icon: "refund" as const, value: "auto", body: "refund jika transaksi gagal" },
-  { icon: "receipt" as const, value: "SNX-ID", body: "setiap order punya kode lacak" },
+  { icon: "receipt" as const, value: "SKX-ID", body: "setiap order punya kode lacak" },
   { icon: "user" as const, value: "0", body: "registrasi yang dibutuhkan" },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const storefront = await getStorefront();
+
   return (
     <main>
       <section className="box pt-12 lg:pt-20">
@@ -165,7 +168,7 @@ export default function HomePage() {
             Lihat katalog lengkap
           </Link>
         </div>
-        <DirectoryExplorer />
+        <DirectoryExplorer minPrices={storefront.minPrices} />
       </section>
 
       <section className="box pt-24">

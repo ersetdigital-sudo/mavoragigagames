@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { Icon } from "@/components/Icon";
@@ -11,32 +11,37 @@ import {
   SERVICE_ORDER,
   detectOperator,
   formatRp,
-  isSlug,
   normalizePhone,
-  simulateBill,
   type ProductItem,
   type Slug,
 } from "@/lib/catalog";
-import { newOrderId, saveOrder, type Order } from "@/lib/store";
+import type { HydratedService } from "@/lib/catalog-hydrate";
+import { createOrder } from "@/lib/db/client";
+import { toPublicError } from "@/lib/db/errors";
+import { rememberInvoice } from "@/lib/store";
 
-export function CheckoutClient() {
-  const search = useSearchParams();
-  const slugParam = search.get("s");
-  const slug = isSlug(slugParam) ? slugParam : "pulsa";
-  const prefill = search.get("n") ?? "";
-
-  return <CheckoutForm key={`${slug}:${prefill}`} slug={slug} prefill={prefill} />;
-}
-
-function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
+export function CheckoutClient({
+  service,
+  slug,
+  prefill,
+  brandSlug,
+  qrisMethodId,
+}: {
+  service: HydratedService;
+  slug: Slug;
+  prefill: string;
+  brandSlug: string;
+  qrisMethodId: string | null;
+}) {
   const router = useRouter();
-  const service = SERVICES[slug];
 
   const [target, setTarget] = useState(prefill);
   const [provider, setProvider] = useState<string | null>(
     !service.detect && service.prov.length === 1 ? service.prov[0] : null,
   );
   const [item, setItem] = useState<ProductItem | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [payError, setPayError] = useState("");
 
   const operator = service.detect ? detectOperator(target) : null;
   const activeProvider = service.detect ? operator : provider;
@@ -46,16 +51,12 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
     setItem(null);
   }, [activeProvider]);
 
-  const bill =
+  const bill: ProductItem | null =
     service.bill && provider && digits.length >= 6
-      ? simulateBill(slug, provider, target)
+      ? service.billItem ?? null
       : null;
 
-  const effectiveItem: ProductItem | null = service.bill
-    ? bill
-      ? { n: `Tagihan ${bill.periode}`, p: bill.total }
-      : null
-    : item;
+  const effectiveItem: ProductItem | null = service.bill ? bill : item;
 
   const targetOk =
     service.targetType === "phone"
@@ -87,21 +88,19 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
               <span style={{ color: "#2BB673" }}>200 OK</span>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-y-2">
-              <span style={{ color: "#9AA0AE" }}>nama</span>
-              <span className="text-right">{bill.nama}</span>
-              <span style={{ color: "#9AA0AE" }}>periode</span>
-              <span className="text-right">{bill.periode}</span>
-              <span style={{ color: "#9AA0AE" }}>tagihan</span>
-              <span className="text-right">{formatRp(bill.tagihan)}</span>
-              <span style={{ color: "#9AA0AE" }}>admin</span>
-              <span className="text-right">{formatRp(bill.admin)}</span>
+              <span style={{ color: "#9AA0AE" }}>produk</span>
+              <span className="text-right">{bill.n}</span>
+              <span style={{ color: "#9AA0AE" }}>provider</span>
+              <span className="text-right">{provider}</span>
+              <span style={{ color: "#9AA0AE" }}>tujuan</span>
+              <span className="truncate text-right">{target.trim()}</span>
               <span style={{ color: "#9AA0AE" }}>total</span>
               <span className="text-right font-bold" style={{ color: "#F3E64B" }}>
-                {formatRp(bill.total)}
+                {formatRp(bill.p)}
               </span>
             </div>
           </div>
-          <p className="tag mt-2 normal-case">› data simulasi</p>
+          <p className="tag mt-2 normal-case">› nominal dari katalog, dicek admin</p>
         </>
       );
     }
@@ -149,20 +148,22 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
         ? "› prefix tidak dikenali"
         : "› prefix dibaca otomatis (08xx / 62xx)"
     : service.bill
-      ? "› tagihan ditarik otomatis setelah ID valid (simulasi)"
+      ? "› tagihan diambil dari katalog setelah ID valid"
       : service.targetType === "phone"
         ? "› pakai nomor yang terdaftar di akun e-wallet"
         : "› pastikan ID sudah benar";
 
-  const hint = !targetOk
-    ? `› isi ${service.label.toLowerCase()}`
-    : !providerOk
-      ? "› pilih provider"
-      : !effectiveItem
-        ? service.bill
-          ? "› menunggu tagihan"
-          : "› pilih nominal"
-        : `› ${effectiveItem.n} · QRIS`;
+  const hint = payError
+    ? `› ${payError}`
+    : !targetOk
+      ? `› isi ${service.label.toLowerCase()}`
+      : !providerOk
+        ? "› pilih provider"
+        : !effectiveItem
+          ? service.bill
+            ? "› menunggu tagihan"
+            : "› pilih nominal"
+          : `› ${effectiveItem.n} · QRIS`;
 
   const blocks: { key: string; title: string; ok: boolean; body: React.ReactNode }[] = [
     {
@@ -263,24 +264,47 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
     ["biaya", "gratis"],
   ];
 
-  const pay = () => {
-    if (!ready || !effectiveItem || !activeProvider) return;
-    const id = newOrderId();
-    const order: Order = {
-      id,
-      slug,
-      product: service.name,
-      provider: activeProvider,
-      item: effectiveItem.n,
-      target:
-        service.targetType === "phone" ? normalizePhone(target) : target.trim(),
-      amount: effectiveItem.p,
-      method: "QRIS",
-      status: "processing",
-      createdAt: Date.now(),
-    };
-    saveOrder(order);
-    router.push(`/bayar?id=${id}`);
+  const pay = async () => {
+    if (!ready || !effectiveItem || !activeProvider || paying) return;
+    if (!service.dbServiceId || !effectiveItem.id) {
+      setPayError("Data produk belum lengkap. Muat ulang halaman.");
+      return;
+    }
+    if (!brandSlug || !qrisMethodId) {
+      setPayError("Pembayaran belum tersedia. Coba lagi sebentar.");
+      return;
+    }
+
+    const targetValue =
+      service.targetType === "phone" ? normalizePhone(target) : target.trim();
+    setPaying(true);
+    setPayError("");
+    try {
+      const created = await createOrder({
+        brandSlug,
+        serviceId: service.dbServiceId,
+        productId: effectiveItem.id,
+        nomorTujuan: targetValue,
+        input: {
+          provider: activeProvider,
+          item: effectiveItem.n,
+          nomor_tujuan: targetValue,
+        },
+        paymentMethodId: qrisMethodId,
+      });
+      rememberInvoice({
+        ref: created.ref,
+        label: effectiveItem.n,
+        product: service.name,
+        slug,
+        amount: created.total,
+        createdAt: Date.now(),
+      });
+      router.push(`/bayar?id=${created.ref}`);
+    } catch (error) {
+      setPayError(toPublicError(error).message);
+      setPaying(false);
+    }
   };
 
   return (
@@ -367,9 +391,22 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
                 <span className="tag">total</span>
                 <span className="mono text-3xl font-bold">{formatRp(total)}</span>
               </div>
-              <button type="button" className="b b-ink mt-5 w-full" disabled={!ready} onClick={pay}>
-                Eksekusi pembayaran
+              <button
+                type="button"
+                className="b b-ink mt-5 w-full"
+                disabled={!ready || paying}
+                onClick={() => void pay()}
+              >
+                {paying ? "Memproses…" : "Eksekusi pembayaran"}
               </button>
+              {payError ? (
+                <p
+                  className="mono mt-3 text-center text-xs"
+                  style={{ color: "#B42318" }}
+                >
+                  › {payError}
+                </p>
+              ) : null}
               <p className="tag mt-3 text-center normal-case">
                 tanpa akun · bayar QRIS · auto-refund
               </p>
@@ -387,8 +424,13 @@ function CheckoutForm({ slug, prefill }: { slug: Slug; prefill: string }) {
             {formatRp(total)}
           </div>
         </div>
-        <button type="button" className="b b-lem" disabled={!ready} onClick={pay}>
-          Bayar
+        <button
+          type="button"
+          className="b b-lem"
+          disabled={!ready || paying}
+          onClick={() => void pay()}
+        >
+          {paying ? "…" : "Bayar"}
         </button>
       </div>
     </>

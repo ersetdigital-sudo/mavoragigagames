@@ -8,14 +8,17 @@ import {
   SERVICE_CODES,
   SERVICE_ORDER,
   formatRp,
-  minPrice,
   type Slug,
 } from "@/lib/catalog";
 
-export function DirectoryExplorer() {
+export function DirectoryExplorer({
+  minPrices,
+}: {
+  minPrices: Record<Slug, number | null>;
+}) {
   const [active, setActive] = useState<Slug>("pulsa");
   const service = SERVICES[active];
-  const min = minPrice(active);
+  const min = minPrices[active] ?? null;
 
   return (
     <div className="sx-ex mt-10">
