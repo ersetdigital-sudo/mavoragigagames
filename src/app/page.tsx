@@ -174,7 +174,7 @@ export default async function HomePage() {
       <section className="box pt-24">
         <div className="rv">
           <div className="tag">
-            <b>[SX-03]</b> &nbsp;Cara pakai
+            <b>[MV-03]</b> &nbsp;Cara pakai
           </div>
           <h2 className="mt-3 text-4xl sm:text-5xl">
             Ketik, bayar, <span className="hl">beres.</span>
@@ -242,7 +242,7 @@ export default async function HomePage() {
       <section className="box pt-24">
         <div className="rv">
           <div className="tag">
-            <b>[SX-04]</b> &nbsp;Keunggulan
+            <b>[MV-04]</b> &nbsp;Keunggulan
           </div>
           <h2 className="mt-3 text-4xl sm:text-5xl">
             Cepat, aman,
