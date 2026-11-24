@@ -84,18 +84,18 @@ export function CheckoutClient({
             style={{ background: "var(--ink)", color: "#F7F7F2" }}
           >
             <div className="flex justify-between">
-              <span style={{ color: "#9AA0AE" }}>GET /tagihan</span>
-              <span style={{ color: "#2BB673" }}>200 OK</span>
+              <span style={{ color: "#8d9db0" }}>GET /tagihan</span>
+              <span style={{ color: "#2a9d8f" }}>200 OK</span>
             </div>
             <div className="mt-3 grid grid-cols-2 gap-y-2">
-              <span style={{ color: "#9AA0AE" }}>produk</span>
+              <span style={{ color: "#8d9db0" }}>produk</span>
               <span className="text-right">{bill.n}</span>
-              <span style={{ color: "#9AA0AE" }}>provider</span>
+              <span style={{ color: "#8d9db0" }}>provider</span>
               <span className="text-right">{provider}</span>
-              <span style={{ color: "#9AA0AE" }}>tujuan</span>
+              <span style={{ color: "#8d9db0" }}>tujuan</span>
               <span className="truncate text-right">{target.trim()}</span>
-              <span style={{ color: "#9AA0AE" }}>total</span>
-              <span className="text-right font-bold" style={{ color: "#F3E64B" }}>
+              <span style={{ color: "#8d9db0" }}>total</span>
+              <span className="text-right font-bold" style={{ color: "#ffb703" }}>
                 {formatRp(bill.p)}
               </span>
             </div>
@@ -417,10 +417,10 @@ export function CheckoutClient({
 
       <div className="fbar lg:hidden">
         <div className="min-w-0 flex-1">
-          <div className="mono truncate text-[11px]" style={{ color: "#9AA0AE" }}>
+          <div className="mono truncate text-[11px]" style={{ color: "#8d9db0" }}>
             {hint}
           </div>
-          <div className="mono text-lg font-bold" style={{ color: "#F3E64B" }}>
+          <div className="mono text-lg font-bold" style={{ color: "#ffb703" }}>
             {formatRp(total)}
           </div>
         </div>

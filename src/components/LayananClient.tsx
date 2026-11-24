@@ -113,14 +113,14 @@ export function LayananClient({
                   <Link
                     key={slug}
                     href={`/checkout?s=${slug}`}
-                    className="pn group flex flex-col gap-5 p-5 transition hover:-translate-y-1 hover:shadow-[6px_6px_0_#292F3D]"
+                    className="pn group flex flex-col gap-5 p-5 transition hover:-translate-y-1 hover:shadow-[6px_6px_0_#0d1b2a]"
                   >
                     <div className="flex items-start justify-between">
                       <span
-                        className="grid h-12 w-12 place-items-center rounded-lg transition group-hover:bg-[#F3E64B]"
+                        className="grid h-12 w-12 place-items-center rounded-lg transition group-hover:bg-[#ffb703]"
                         style={{ background: "var(--ink)", color: "var(--lem)" }}
                       >
-                        <span className="transition group-hover:text-[#292F3D]">
+                        <span className="transition group-hover:text-[#0d1b2a]">
                           <Icon name={service.icon} />
                         </span>
                       </span>
@@ -150,7 +150,7 @@ export function LayananClient({
                       <dt className="mut">kategori</dt>
                       <dd className="text-right font-bold">{service.catL}</dd>
                     </dl>
-                    <span className="b b-out w-full group-hover:bg-[#292F3D] group-hover:text-[#F3E64B]">
+                    <span className="b b-out w-full group-hover:bg-[#0d1b2a] group-hover:text-[#ffb703]">
                       Buka checkout <Icon name="arrow" className="h-4 w-4" />
                     </span>
                   </Link>

@@ -16,19 +16,19 @@ export function SiteFooter() {
             <div className="foot-logo">
               <Logo />
             </div>
-            <p className="mt-4 max-w-xs text-sm" style={{ color: "#B8BCC6" }}>
+            <p className="mt-4 max-w-xs text-sm" style={{ color: "#b3bfcc" }}>
               Infrastruktur isi ulang &amp; pembayaran tagihan untuk semua orang.
               Cepat, tercatat, bisa dilacak.
             </p>
           </div>
           <div>
-            <div className="tag" style={{ color: "#F3E64B" }}>
+            <div className="tag" style={{ color: "#ffb703" }}>
               // isi ulang
             </div>
-            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#D5D8DF" }}>
+            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#d3dae2" }}>
               {refill.map((slug) => (
                 <li key={slug}>
-                  <Link className="hover:text-[#F3E64B]" href={`/checkout?s=${slug}`}>
+                  <Link className="hover:text-[#ffb703]" href={`/checkout?s=${slug}`}>
                     {SERVICES[slug].name}
                   </Link>
                 </li>
@@ -36,13 +36,13 @@ export function SiteFooter() {
             </ul>
           </div>
           <div>
-            <div className="tag" style={{ color: "#F3E64B" }}>
+            <div className="tag" style={{ color: "#ffb703" }}>
               // tagihan
             </div>
-            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#D5D8DF" }}>
+            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#d3dae2" }}>
               {bills.map((slug) => (
                 <li key={slug}>
-                  <Link className="hover:text-[#F3E64B]" href={`/checkout?s=${slug}`}>
+                  <Link className="hover:text-[#ffb703]" href={`/checkout?s=${slug}`}>
                     {SERVICES[slug].name}
                   </Link>
                 </li>
@@ -50,23 +50,23 @@ export function SiteFooter() {
             </ul>
           </div>
           <div>
-            <div className="tag" style={{ color: "#F3E64B" }}>
+            <div className="tag" style={{ color: "#ffb703" }}>
               // sistem
             </div>
-            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#D5D8DF" }}>
+            <ul className="mt-4 space-y-2 text-sm" style={{ color: "#d3dae2" }}>
               <li>
-                <Link className="hover:text-[#F3E64B]" href="/lacak">
+                <Link className="hover:text-[#ffb703]" href="/lacak">
                   Lacak transaksi
                 </Link>
               </li>
               <li>
-                <Link className="hover:text-[#F3E64B]" href="/bantuan">
+                <Link className="hover:text-[#ffb703]" href="/bantuan">
                   Dokumentasi bantuan
                 </Link>
               </li>
               <li>
                 <a
-                  className="hover:text-[#F3E64B]"
+                  className="hover:text-[#ffb703]"
                   href={WA_LINK}
                   target="_blank"
                   rel="noreferrer"
@@ -79,9 +79,9 @@ export function SiteFooter() {
         </div>
         <div
           className="mono mt-14 flex flex-col justify-between gap-3 pt-6 text-xs sm:flex-row"
-          style={{ borderTop: "1px solid rgba(247,247,242,.12)", color: "#9AA0AE" }}
+          style={{ borderTop: "1px solid rgba(247,247,242,.12)", color: "#8d9db0" }}
         >
-          <span>© {year} SUKNEXAIDEA</span>
+          <span>© {year} MAVORAGIGAGAMES</span>
           <span>
             v1.0 · {SERVICE_ORDER.length} layanan · uptime 99.9% · build {year}.10
           </span>

@@ -46,15 +46,15 @@ export function DirectoryExplorer({
           <span className="sx-big">
             <Icon name={service.icon} />
           </span>
-          <span className="mono text-xs" style={{ color: "#9AA0AE" }}>
+          <span className="mono text-xs" style={{ color: "#8d9db0" }}>
             {SERVICE_CODES[active]} · {service.catL.toUpperCase()}
           </span>
         </div>
         <h3 className="mt-10 text-4xl xl:text-5xl">{service.name}</h3>
-        <p className="mt-3 text-lg" style={{ color: "#B5B9C3" }}>
+        <p className="mt-3 text-lg" style={{ color: "#b1bcc9" }}>
           {service.desc}
         </p>
-        <div className="mono mt-8 text-xs" style={{ color: "#9AA0AE" }}>
+        <div className="mono mt-8 text-xs" style={{ color: "#8d9db0" }}>
           TERSEDIA UNTUK
         </div>
         <div className="mt-3 flex flex-wrap gap-2">
@@ -66,7 +66,7 @@ export function DirectoryExplorer({
         </div>
         <div className="mt-auto flex items-end justify-between gap-4 pt-10">
           <div>
-            <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
+            <div className="mono text-xs" style={{ color: "#8d9db0" }}>
               MULAI DARI
             </div>
             <div

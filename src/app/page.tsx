@@ -14,7 +14,7 @@ const BENEFITS = [
   {
     icon: "search" as const,
     title: "Bisa dilacak",
-    body: "Setiap pesanan punya kode SKX.",
+    body: "Setiap pesanan punya kode MVG.",
   },
   {
     icon: "user" as const,
@@ -26,7 +26,7 @@ const BENEFITS = [
 const SPECS = [
   { icon: "bolt" as const, value: "±5s", body: "rata-rata waktu proses" },
   { icon: "refund" as const, value: "auto", body: "refund jika transaksi gagal" },
-  { icon: "receipt" as const, value: "SKX-ID", body: "setiap order punya kode lacak" },
+  { icon: "receipt" as const, value: "MVG-ID", body: "setiap order punya kode lacak" },
   { icon: "user" as const, value: "0", body: "registrasi yang dibutuhkan" },
 ];
 
@@ -57,7 +57,7 @@ export default async function HomePage() {
         <div className="mt-16 grid grid-cols-1 gap-4 md:grid-cols-6 lg:mt-20">
           <div className="hx-card dark flex flex-col p-6 md:col-span-3 lg:col-span-2">
             <div className="flex items-center justify-between">
-              <span className="tag" style={{ color: "#9AA0AE" }}>
+              <span className="tag" style={{ color: "#8d9db0" }}>
                 Transaksi
               </span>
               <span className="hx-ok">● Berhasil</span>
@@ -71,20 +71,20 @@ export default async function HomePage() {
               </span>
               <div>
                 <div className="font-bold">Pulsa Telkomsel</div>
-                <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
+                <div className="mono text-xs" style={{ color: "#8d9db0" }}>
                   0812 •••• 4488
                 </div>
               </div>
             </div>
             <div className="mt-auto flex items-end justify-between pt-8">
               <div>
-                <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
+                <div className="mono text-xs" style={{ color: "#8d9db0" }}>
                   TOTAL
                 </div>
                 <div className="text-3xl font-extrabold tracking-tight">Rp51.250</div>
               </div>
               <div className="text-right">
-                <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
+                <div className="mono text-xs" style={{ color: "#8d9db0" }}>
                   WAKTU
                 </div>
                 <div className="mono font-bold" style={{ color: "var(--lem)" }}>
@@ -96,10 +96,10 @@ export default async function HomePage() {
 
           <div
             className="hx-card p-6 md:col-span-3 lg:col-span-2"
-            style={{ background: "var(--lem)", borderColor: "var(--lem)", color: "#292F3D" }}
+            style={{ background: "var(--lem)", borderColor: "var(--lem)", color: "#0d1b2a" }}
           >
-            <span className="tag" style={{ color: "#292F3D" }}>
-              Kenapa Suknex
+            <span className="tag" style={{ color: "#0d1b2a" }}>
+              Kenapa Mavoragiga
             </span>
             <div className="mt-5 space-y-4">
               {BENEFITS.map((benefit) => (
@@ -227,12 +227,12 @@ export default async function HomePage() {
               >
                 STEP_03
               </span>
-              <span className="mono text-xs" style={{ color: "#9AA0AE" }}>
+              <span className="mono text-xs" style={{ color: "#8d9db0" }}>
                 ±5 dtk
               </span>
             </div>
             <h3 className="mt-8 text-2xl">Diproses &amp; terkirim</h3>
-            <p className="mt-2 text-[15px] leading-relaxed" style={{ color: "#B8BCC6" }}>
+            <p className="mt-2 text-[15px] leading-relaxed" style={{ color: "#b3bfcc" }}>
               Sistem meneruskan ke provider. Gagal? Dana dikembalikan otomatis.
             </p>
           </div>
@@ -272,7 +272,7 @@ export default async function HomePage() {
           style={{ background: "var(--lem)", borderColor: "var(--ink)" }}
         >
           <div>
-            <div className="tag" style={{ color: "#292F3D" }}>
+            <div className="tag" style={{ color: "#0d1b2a" }}>
               // siap eksekusi
             </div>
             <h2 className="mt-3 max-w-xl text-4xl sm:text-5xl">

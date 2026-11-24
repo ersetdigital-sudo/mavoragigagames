@@ -1660,8 +1660,8 @@ body:has(.admin-root) > .site-promo {
   --adm-line: #f0dfe7;
   --adm-soft: #fff2f7;
   --adm-bg: #fbf6f9;
-  --adm-brand: #e0337a;
-  --adm-green: #16835e;
+  --adm-brand: #8e7cc3;
+  --adm-green: #2a9d8f;
   --adm-red: #c2415b;
 }
 
@@ -1887,7 +1887,7 @@ body:has(.admin-root) {
   color: #9a9083;
 }
 
-/* ============ tema Niranova ============ */
+/* ============ tema Mavoragigagames ============ */
 
 html:has(.admin-root),
 body:has(.admin-root) {
@@ -1896,27 +1896,27 @@ body:has(.admin-root) {
 
 body:has(.admin-root) {
   background: #f8f8f3;
-  color: #292f3d;
+  color: #0d1b2a;
   padding-bottom: 0 !important;
 }
 
 .admin-root {
-  --adm-ink: #292f3d;
-  --adm-ink2: #3d4353;
-  --adm-muted: #6b7080;
-  --adm-line: #dcdde3;
+  --adm-ink: #0d1b2a;
+  --adm-ink2: #1f3347;
+  --adm-muted: #5b6b7d;
+  --adm-line: #d9dfe5;
   --adm-soft: #f4f4ec;
   --adm-bg: #f8f8f3;
-  --adm-brand: #292f3d;
-  --adm-green: #2e7d5b;
+  --adm-brand: #0d1b2a;
+  --adm-green: #2a9d8f;
   --adm-red: #c81e3c;
 }
 
 .admin-root .adm-login-left {
-  background: #1e2330;
+  background: #08121e;
 }
 
 .admin-root .adm-side-brand span,
 .admin-root .adm-nav-label {
-  color: #aeb3c2;
+  color: #a9b8c8;
 }

@@ -1,8 +1,6 @@
 import type { Slug } from "./catalog";
 
-export const ORDERS_KEY = "suknexaidea_invoices";
-export const QRIS_IMAGE =
-  "https://res.cloudinary.com/dqjh7utdb/image/upload/v1792161327/camhvfeu1lcm0ps8ieiz.jpg";
+export const ORDERS_KEY = "mavoragigagames_invoices";
 export const ADMIN_WA = "085711172317";
 export const WA_LINK = "https://wa.me/6285711172317";
 export const PAID_MESSAGE = "Terima kasih, pembayaran Anda sedang diproses";

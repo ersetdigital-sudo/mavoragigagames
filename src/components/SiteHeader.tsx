@@ -84,7 +84,7 @@ export function SiteHeader() {
       {open && (
         <div className="ovl" role="dialog" aria-modal="true" aria-label="Menu navigasi">
           <div className="flex h-12 items-center justify-between">
-            <span className="tag" style={{ color: "#F3E64B" }}>
+            <span className="tag" style={{ color: "#ffb703" }}>
               // MENU
             </span>
             <button

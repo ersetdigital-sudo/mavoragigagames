@@ -3,13 +3,13 @@
 :root {
   --bg: #f7f7f2;
   --sf: #ffffff;
-  --ink: #292f3d;
-  --ink2: #1e2330;
-  --lem: #f3e64b;
-  --lem2: #e9da2c;
-  --mut: #6b7080;
-  --line: rgba(41, 47, 61, 0.12);
-  --line2: rgba(41, 47, 61, 0.22);
+  --ink: #0d1b2a;
+  --ink2: #08121e;
+  --lem: #ffb703;
+  --lem2: #e8a200;
+  --mut: #5b6b7d;
+  --line: rgba(13, 27, 42, 0.12);
+  --line2: rgba(13, 27, 42, 0.22);
   --f: var(--font-geist), system-ui, sans-serif;
   --m: var(--font-geist-mono), ui-monospace, monospace;
 }
@@ -183,7 +183,7 @@ body::before {
   .b-lem {
     background: var(--lem);
     color: var(--ink);
-    box-shadow: inset 0 0 0 1px rgba(41, 47, 61, 0.15);
+    box-shadow: inset 0 0 0 1px rgba(13, 27, 42, 0.15);
   }
 
   .b-lem:hover {
@@ -237,7 +237,7 @@ body::before {
 
   .in:focus {
     border-color: var(--ink);
-    box-shadow: 0 0 0 3px rgba(243, 230, 75, 0.6);
+    box-shadow: 0 0 0 3px rgba(255, 183, 3, 0.6);
   }
 
   .ico {
@@ -263,7 +263,7 @@ body::before {
   .live i {
     width: 8px;
     height: 8px;
-    background: #2bb673;
+    background: #2a9d8f;
     border-radius: 2px;
     animation: blink 1.4s steps(2) infinite;
   }
@@ -302,7 +302,7 @@ body::before {
 
   .nv a:hover {
     color: var(--ink);
-    background: rgba(41, 47, 61, 0.05);
+    background: rgba(13, 27, 42, 0.05);
   }
 
   .nv a.on {
@@ -530,14 +530,14 @@ body::before {
     border: 1px solid var(--line2);
     border-radius: 16px;
     padding: 8px 8px 8px 18px;
-    box-shadow: 0 1px 0 rgba(41, 47, 61, 0.04), 0 20px 50px -20px rgba(41, 47, 61, 0.35);
+    box-shadow: 0 1px 0 rgba(13, 27, 42, 0.04), 0 20px 50px -20px rgba(13, 27, 42, 0.35);
     transition: box-shadow 0.2s, border 0.2s;
     min-height: 64px;
   }
 
   .hx-cmd:focus-within {
     border-color: var(--ink);
-    box-shadow: 0 0 0 4px rgba(243, 230, 75, 0.7), 0 20px 50px -20px rgba(41, 47, 61, 0.35);
+    box-shadow: 0 0 0 4px rgba(255, 183, 3, 0.7), 0 20px 50px -20px rgba(13, 27, 42, 0.35);
   }
 
   .hx-ic {
@@ -573,7 +573,7 @@ body::before {
 
   .hx-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 24px 50px -24px rgba(41, 47, 61, 0.4);
+    box-shadow: 0 24px 50px -24px rgba(13, 27, 42, 0.4);
   }
 
   .hx-card.dark {
@@ -586,7 +586,7 @@ body::before {
     font-family: var(--m);
     font-size: 12px;
     font-weight: 600;
-    color: #2bb673;
+    color: #2a9d8f;
   }
 
   .hx-pm {
@@ -779,11 +779,11 @@ body::before {
     padding: 6px 12px;
     border-radius: 999px;
     border: 1px solid rgba(247, 247, 242, 0.18);
-    color: #e6e7ea;
+    color: #e3e8ed;
   }
 
   .foot-logo .mut {
-    color: #9aa0ae;
+    color: #8d9db0;
   }
 
   /* checkout */
@@ -905,7 +905,7 @@ body::before {
   }
 
   .qa[open] {
-    background: rgba(243, 230, 75, 0.18);
+    background: rgba(255, 183, 3, 0.18);
   }
 
   .qa .ans {

@@ -19,22 +19,22 @@ export const PUBLIC_STATUS: Record<
   menunggu_cek: {
     label: "Lagi dicek admin",
     badgeClass: "badge b-wait",
-    dotClass: "bg-[#f5a623]",
+    dotClass: "bg-[#ffb703]",
   },
   menunggu_bayar: {
     label: "Menunggu pembayaran",
     badgeClass: "badge b-wait",
-    dotClass: "bg-[#f5a623]",
+    dotClass: "bg-[#ffb703]",
   },
   sudah_bayar: {
     label: "Pembayaran dicek admin",
     badgeClass: "badge b-wait",
-    dotClass: "bg-[#e0337a]",
+    dotClass: "bg-[#8e7cc3]",
   },
   sukses: {
     label: "Sukses",
     badgeClass: "badge b-ok",
-    dotClass: "bg-[#16835e]",
+    dotClass: "bg-[#2a9d8f]",
   },
   dibatalkan: {
     label: "Dibatalkan",

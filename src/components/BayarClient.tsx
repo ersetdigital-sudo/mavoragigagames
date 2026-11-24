@@ -9,7 +9,6 @@ import { SERVICES, formatRp } from "@/lib/catalog";
 import {
   ADMIN_WA,
   PAID_MESSAGE,
-  QRIS_IMAGE,
   formatDate,
   waLink,
 } from "@/lib/store";
@@ -103,7 +102,7 @@ export function BayarClient() {
           <h1 className="mt-5 text-3xl">Pesanan tidak ditemukan</h1>
           <p className="mut mt-2 text-sm">
             Kode pesanan tidak cocok dengan data server. Periksa kembali kode
-            SKX kamu, atau buat pesanan baru.
+            MVG kamu, atau buat pesanan baru.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-2">
             <Link href="/layanan" className="b b-ink">
@@ -242,13 +241,20 @@ export function BayarClient() {
                     className="w-full max-w-[280px] shrink-0 rounded-xl bg-white p-3"
                     style={{ border: "1px solid var(--line2)" }}
                   >
-                    <img
-                      src={order.qris || QRIS_IMAGE}
-                      alt="Kode QRIS untuk pembayaran pesanan"
-                      className="block h-auto w-full rounded-md"
-                      width={520}
-                      height={520}
-                    />
+                    {order.qris ? (
+                      <img
+                        src={order.qris}
+                        alt="Kode QRIS untuk pembayaran pesanan"
+                        className="block h-auto w-full rounded-md"
+                        width={520}
+                        height={520}
+                      />
+                    ) : (
+                      <p className="p-6 text-center text-sm text-mut">
+                        QRIS belum tersedia. Hubungi CS lewat pusat bantuan untuk
+                        menyelesaikan pembayaran.
+                      </p>
+                    )}
                     <div className="mono mt-2 flex items-center justify-between text-[10px] uppercase tracking-wider text-mut">
                       <span>QRIS</span>
                       <span>semua bank &amp; e-wallet</span>
@@ -352,10 +358,10 @@ export function BayarClient() {
 
       <div className="fbar lg:hidden">
         <div className="min-w-0 flex-1">
-          <div className="mono truncate text-[11px]" style={{ color: "#9AA0AE" }}>
+          <div className="mono truncate text-[11px]" style={{ color: "#8d9db0" }}>
             › {order.inv} · {statusText[activeStatus].toLowerCase()}
           </div>
-          <div className="mono text-lg font-bold" style={{ color: "#F3E64B" }}>
+          <div className="mono text-lg font-bold" style={{ color: "#ffb703" }}>
             {formatRp(order.total)}
           </div>
         </div>

@@ -120,7 +120,7 @@ export function LacakClient() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
           className="mono min-w-0 flex-1 bg-transparent text-base uppercase outline-none sm:text-lg"
-          placeholder="SKX-XXXXXX"
+          placeholder="MVG-XXXXXX"
           autoComplete="off"
           aria-label="Kode transaksi"
         />
@@ -171,7 +171,7 @@ export function LacakClient() {
                   key={entry.ref}
                   type="button"
                   onClick={() => select(entry)}
-                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[#F3E64B]"
+                  className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-[#ffb703]"
                   style={
                     index
                       ? { borderTop: "1px solid var(--line)" }
@@ -280,16 +280,16 @@ function OrderResult({ order }: { order: ApiOrder }) {
         style={{ background: "var(--ink)", color: "#F7F7F2" }}
       >
         <div>
-          <div className="mono text-xs" style={{ color: "#9AA0AE" }}>
+          <div className="mono text-xs" style={{ color: "#8d9db0" }}>
             {order.service} · {formatDate(order.created)}
           </div>
-          <div className="mono mt-1 text-2xl font-bold sm:text-3xl" style={{ color: "#F3E64B" }}>
+          <div className="mono mt-1 text-2xl font-bold sm:text-3xl" style={{ color: "#ffb703" }}>
             {order.inv}
           </div>
         </div>
         <span
           className="mono rounded px-2.5 py-1.5 text-xs font-bold"
-          style={{ background: "#F3E64B", color: "#292F3D" }}
+          style={{ background: "#ffb703", color: "#0d1b2a" }}
         >
           ● {statusText[order.status]}
         </span>
